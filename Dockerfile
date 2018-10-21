@@ -20,13 +20,13 @@ COPY lms.keywords /etc/portage/package.keywords
 COPY lms.use /etc/portage/package.use
 COPY make.conf.lms-gd /etc/portage/
 
-COPY logitechmediaserver /etc/logitechmediaserver
-
 RUN cat /etc/portage/make.conf.lms-gd >>/etc/portage/make.conf && \
     echo rc_provide="net" >>/etc/rc.conf && \
     emerge -v media-sound/logitechmediaserver-bin && \
     rc-update add logitechmediaserver default && \
     rm -rf /usr/portage
+
+COPY --chown=logitechmediaserver logitechmediaserver /etc/logitechmediaserver
 
 VOLUME  /mnt/music
 
