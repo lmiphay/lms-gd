@@ -1,0 +1,11 @@
+#!/bin/bash
+
+LMS_GD_MUSIC=${1:-"/mnt/music"}
+
+exec docker run --detach \
+     -p 3483:3483 \
+     -p 3483:3483/udp \
+     -p 9000:9000 \
+     -p 9090:9090 \
+     -v ${LMS_GD_MUSIC}:/mnt/music \
+     gentoo/lms:latest

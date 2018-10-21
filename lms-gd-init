@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cp -p /usr/share/lms-gd/{Dockerfile,lms.keywords,lms.use,make.conf.lms-gd,squeezebox.conf} .
+
+[ ! -d "squeezebox" ] && git clone https://cgit.gentoo.org/user/squeezebox.git
+
+if [ -d "/etc/logitechmediaserver" ] ; then
+    # this will fail unless the user has read rights on /etc/logitechmediaserver
+    echo "Attempting to copy the current servers /etc/logitechmediaserver to this directory"
+    cp -pr /etc/logitechmediaserver .
+fi
+
+exit 0
+
