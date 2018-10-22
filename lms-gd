@@ -1,0 +1,62 @@
+#!/bin/bash
+
+music_dir=${LMS_GD_MUSIC:-"/mnt/music"}
+image_name=${LMS_GD_IMAGE:-"gentoo/lms:latest"}
+container_name=${LMS_GD_CONTAINER:-"lms"}
+
+case "$1" in
+    init)
+	cp -upv /usr/share/lms-gd/{Dockerfile,lms.keywords,lms.use,make.conf.lms-gd,squeezebox.conf} .
+	[ ! -d "squeezebox" ] && git clone https://cgit.gentoo.org/user/squeezebox.git
+	if [ -d "/etc/logitechmediaserver" ] ; then
+	    echo "Attempting to copy the current servers /etc/logitechmediaserver to this directory"
+	    # this will fail unless the user has read rights on /etc/logitechmediaserver
+	    cp -pr /etc/logitechmediaserver .
+	else
+	    echo "/etc/logitechmediaserver not found - manually copy in a settings directory if needed."
+	fi
+	;;
+    build)
+	exec docker build --tag "${2:-$image_name}" .
+	;;
+    create)
+	exec docker create \
+	     --detach \
+	     -p 3483:3483 \
+	     -p 3483:3483/udp \
+	     -p 9000:9000 \
+	     -p 9090:9090 \
+	     -v "${2:-$music_dir}:/mnt/music" \
+	     --name "${4:-$container_name}" \
+	     "${3:-$image_name}"
+	;;
+    start)
+	exec docker start "${2:-$container_name}"
+	;;
+    stop)
+	exec docker stop "${2:-$container_name}"
+	;;
+    restart)
+	$0 stop "$2"
+	$0 start "$2"
+	;;
+    *)
+        echo "Usage: $(basename $0) {init|create|start|stop|restart}"
+	echo ""
+	echo "       $(basename $0) init"
+	echo "       $(basename $0) build [<image_name>]"
+	echo "       $(basename $0) create [<music_dir> <image_name> <container_name>]"
+	echo "       $(basename $0) start [<container_name>]"
+	echo "       $(basename $0) stop [<container_name>]"
+	echo "       $(basename $0) restart [<container_name>]"
+	echo ""
+	echo "Settings:"
+	echo ""
+	echo "  music_dir=$music_dir (music location on host)"
+	echo "  image_name=$image_name (un-runnable immutable base for container)"
+	echo "  container_name=$container_name (runnable instance of the image)"
+        exit 1
+esac
+
+exit 0
+
