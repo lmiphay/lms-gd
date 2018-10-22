@@ -23,7 +23,6 @@ case "$1" in
 	;;
     create)
 	exec docker create \
-	     --detach \
 	     -p 3483:3483 \
 	     -p 3483:3483/udp \
 	     -p 9000:9000 \
@@ -41,6 +40,9 @@ case "$1" in
     restart)
 	$0 stop "$2"
 	$0 start "$2"
+	;;
+    shell)
+	exec docker exec -it "${2:-$container_name}" bash -l
 	;;
     *)
         echo "Usage: $(basename $0) {init|create|start|stop|restart}"
