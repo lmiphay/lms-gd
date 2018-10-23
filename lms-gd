@@ -44,8 +44,11 @@ case "$1" in
     shell)
 	exec docker exec -it "${2:-$container_name}" bash -l
 	;;
+    status)
+	exec docker ps -a
+	;;
     *)
-        echo "Usage: $(basename $0) {init|create|start|stop|restart}"
+        echo "Usage: $(basename $0) {init|create|start|stop|restart|shell|status}"
 	echo ""
 	echo "       $(basename $0) init"
 	echo "       $(basename $0) build [<image_name>]"
