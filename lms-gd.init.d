@@ -5,17 +5,7 @@
 description="Logitech Media Server in a Gentoo Docker container"
 
 command="/usr/bin/docker"
-
-# todo: expose port configuration
-command_args="
-	--detach
-	-p 3483:3483 \
-	-p 3483:3483/udp \
-	-p 9000:9000 \
-	-p 9090:9090 \
-	-v ${LMS_GD_MUSIC:-/mnt/music}:/mnt/music
-	${LMS_GD_IMAGE:-gentoo/lms}
-"
+command_args="start ${LMS_GD_CONTAINER:-lms}"
 
 command_background=yes
 pidfile=/run/docker-lms.pid
