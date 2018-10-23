@@ -6,6 +6,8 @@ Install via ebuild in the [lmiphay](https://cgit.gentoo.org/user/lmiphay.git/) o
 
 The ebuild is: [lms-gd](https://cgit.gentoo.org/user/lmiphay.git/tree/media-sound/lms-gd)
 
+# Usage
+
 ```
 $ lms-gd
 Usage: lms-gd {init|create|start|stop|restart|shell|status}
@@ -22,6 +24,7 @@ Settings:
   music_dir=/mnt/music (music location on host)
   image_name=gentoo/lms:latest (un-runnable immutable base for container)
   container_name=lms (runnable instance of the image)
+$
 ```
 
 # Quickstart
