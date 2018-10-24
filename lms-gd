@@ -47,6 +47,9 @@ case "$1" in
     status)
 	exec docker ps -a
 	;;
+    backup)
+	docker exec "${2:-$container_name}" tar -cf - /etc/logitechmediaserver >"lms-gd-etc-logitechmediaserver-$(date +%F-%H-%M-%S).tar"
+	;;
     *)
         echo "Usage: $(basename $0) {init|create|start|stop|restart|shell|status}"
 	echo ""
