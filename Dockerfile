@@ -15,19 +15,22 @@ EXPOSE 3483/tcp 3483/udp 9000 9090
 
 COPY --from=portage /usr/portage /usr/portage
 COPY squeezebox /usr/local/portage
-COPY squeezebox.conf /etc/portage/repos.conf/
-COPY lms.keywords /etc/portage/package.keywords
-COPY lms.use /etc/portage/package.use
-COPY make.conf.lms-gd /etc/portage/
 
-RUN cat /etc/portage/make.conf.lms-gd >>/etc/portage/make.conf && \
+WORKDIR /etc/portage
+
+COPY squeezebox.conf repos.conf/
+COPY lms.keywords package.keywords
+COPY lms.use package.use
+COPY make.conf.lms-gd .
+
+RUN cat make.conf.lms-gd >>make.conf && \
     echo rc_provide="net" >>/etc/rc.conf && \
-    emerge -v media-sound/logitechmediaserver-bin && \
+    emerge media-sound/logitechmediaserver-bin && \
     rc-update add logitechmediaserver default && \
     rm -rf /usr/portage
 
 COPY --chown=logitechmediaserver logitechmediaserver /etc/logitechmediaserver
 
-VOLUME  /mnt/music
+VOLUME /mnt/music
 
 ENTRYPOINT [ "/sbin/init" ]
