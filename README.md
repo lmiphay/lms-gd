@@ -63,7 +63,7 @@ lms-gd references three environment variable during operation. The variables and
 
 # OpenRC
 
-To have logitechmediaserver start inside the container:
+To have the host start the container:
 
 * `rc-config add lms-gd`
 * [optional] change container name in /etc/conf.d/lms-gd
@@ -76,6 +76,11 @@ To have logitechmediaserver start inside the container:
 + script removal RESTRICT="bindist mirror" in ebuild and rebuild manifest
 + add bindfs mount for taking backups
 + add a unit file
+
+# Versions
+
++ 0.2 TBR - add cron, syslog, logrotate to image
++ 0.1 initial proof of concept
 
 # Prior Art
 
