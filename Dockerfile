@@ -25,8 +25,10 @@ COPY make.conf.lms-gd .
 
 RUN cat make.conf.lms-gd >>make.conf && \
     echo rc_provide="net" >>/etc/rc.conf && \
-    emerge media-sound/logitechmediaserver-bin && \
+    emerge app-admin/sysklogd sys-process/cronie app-admin/logrotate media-sound/logitechmediaserver-bin && \
     rc-update add logitechmediaserver default && \
+    rc-update add sysklogd default && \
+    rc-update add cronie default && \
     rm -rf /usr/portage
 
 COPY --chown=logitechmediaserver logitechmediaserver /etc/logitechmediaserver

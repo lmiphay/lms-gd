@@ -72,12 +72,8 @@ To have logitechmediaserver start inside the container:
 # Todo
 
 + set /mnt/music in /etc/logitechmediaserver/server.prefs
-+ install logrotate (see /etc/logrotate.d/logitechmediaserver)
-+ install cronie (see above)
-+ install syslog
 + setup (normal - not docker style) bridged networking to support castbridge/shairport)
 + script removal RESTRICT="bindist mirror" in ebuild and rebuild manifest
-+ documentation
 + add bindfs mount for taking backups
 + add a unit file
 
