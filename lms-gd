@@ -51,7 +51,7 @@ case "$1" in
 	docker exec "${2:-$container_name}" tar -cf - /etc/logitechmediaserver >"lms-gd-etc-logitechmediaserver-$(date +%F-%H-%M-%S).tar"
 	;;
     *)
-        echo "Usage: $(basename $0) {init|create|start|stop|restart|shell|status}"
+        echo "Usage: $(basename $0) {init|create|start|stop|restart|shell|status|backup}"
 	echo ""
 	echo "       $(basename $0) init"
 	echo "       $(basename $0) build [<image_name>]"
@@ -59,6 +59,9 @@ case "$1" in
 	echo "       $(basename $0) start [<container_name>]"
 	echo "       $(basename $0) stop [<container_name>]"
 	echo "       $(basename $0) restart [<container_name>]"
+	echo "       $(basename $0) shell [<container_name>]"
+	echo "       $(basename $0) status"
+	echo "       $(basename $0) backup [<container_name>]"
 	echo ""
 	echo "Settings:"
 	echo ""
