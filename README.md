@@ -84,7 +84,6 @@ To have the host start the container:
 + set /mnt/music in /etc/logitechmediaserver/server.prefs
 + setup (normal - not docker style) bridged networking to support castbridge/shairport)
 + script removal RESTRICT="bindist mirror" in ebuild and rebuild manifest
-+ add a backup script
 + bindfs the container filesystem
 + add a unit file
 
@@ -93,6 +92,11 @@ To have the host start the container:
 + 0.2 TBR - add cron, syslog, logrotate to image; support bridged n/w; add backup
 + 0.1 initial proof of concept
 
-# Prior Art
+# Prior Art/Related Information/References
 
 + [docker-logitechmediaserver](https://github.com/justifiably/docker-logitechmediaserver) (and many forks)
++ https://hub.docker.com/r/larsks/logitech-media-server/
++ https://github.com/jgoerzen/docker-logitech-media-server
++ https://forum.qnap.com/viewtopic.php?f=354&t=123933
++ https://www.eddgrant.com/blog/2016/07/07/running-logitech-media-server-in-docker.html
++ https://forums.slimdevices.com/showthread.php?108312-Providing-Official-Docker-Image
