@@ -4,6 +4,11 @@ music_dir=${LMS_GD_MUSIC:-"/mnt/music"}
 image_name=${LMS_GD_IMAGE:-"gentoo/lms:latest"}
 container_name=${LMS_GD_CONTAINER:-"lms"}
 
+bridge_name=${LMS_GD_BRIDGE:-"br0"}
+ip_address=${LMS_GD_IP}
+broadcast_address=${LMS_GD_BROADCAST}
+router_address=${LMS_GD_ROUTER}
+
 overlay="git://anongit.gentoo.org/user/squeezebox.git"
 
 case "$1" in
@@ -50,6 +55,19 @@ case "$1" in
     backup)
 	docker exec "${2:-$container_name}" tar -cf - /etc/logitechmediaserver >"lms-gd-etc-logitechmediaserver-$(date +%F-%H-%M-%S).tar"
 	;;
+    bridge) # needs root
+	ip link add lms-int type veth peer name lms-ext
+	ip link set lms-ext master "${3:-$bridge_name}"
+	ip link set lms-ext up
+
+	pid=$(docker inspect --format '{{ .State.Pid }}' "${2:-$container_name}")
+	ip link set netns "$pid" dev lms-int
+	nsenter -t "$pid" -n ip link set lms-int up
+	nsenter -t "$pid" -n ip addr add "${4:-$ip_address}" broadcast "${5:$broadcast_address}" dev lms-int
+	nsenter -t "$pid" -n ip route del default
+	nsenter -t "$pid" -n ip route add default via "${6:-$router_address}" dev lms-int
+	#iptables -P FORWARD ACCEPT
+	;;
     *)
         echo "Usage: $(basename $0) {init|create|start|stop|restart|shell|status|backup}"
 	echo ""
@@ -62,6 +80,7 @@ case "$1" in
 	echo "       $(basename $0) shell [<container_name>]"
 	echo "       $(basename $0) status"
 	echo "       $(basename $0) backup [<container_name>]"
+	echo "       $(basename $0) bridge [<container_name> <bridge_name> <ip_address> <broadcast_address> <router_address>]"
 	echo ""
 	echo "Settings:"
 	echo ""
