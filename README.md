@@ -4,9 +4,15 @@ Install via [lms-gd](https://cgit.gentoo.org/user/lmiphay.git/tree/media-sound/l
 
 # Usage
 
+The lms-gd management program can be used to:
++ build images, and createstart/stop containers
++ start a shell on a running container
++ backup the configuration of a running container
+
+
 ```
 $ lms-gd
-Usage: lms-gd {init|create|start|stop|restart|shell|status}
+Usage: lms-gd {init|create|start|stop|restart|shell|status|backup}
 
        lms-gd init
        lms-gd build [<image_name>]
@@ -14,6 +20,10 @@ Usage: lms-gd {init|create|start|stop|restart|shell|status}
        lms-gd start [<container_name>]
        lms-gd stop [<container_name>]
        lms-gd restart [<container_name>]
+       lms-gd shell [<container_name>]
+       lms-gd status
+       lms-gd backup [<container_name>]
+       lms-gd bridge [<container_name> <bridge_name> <ip_address> <broadcast_address> <router_address>]
 
 Settings:
 
@@ -74,7 +84,8 @@ To have the host start the container:
 + set /mnt/music in /etc/logitechmediaserver/server.prefs
 + setup (normal - not docker style) bridged networking to support castbridge/shairport)
 + script removal RESTRICT="bindist mirror" in ebuild and rebuild manifest
-+ add bindfs mount for taking backups
++ add a backup script
++ bindfs the container filesystem
 + add a unit file
 
 # Versions
