@@ -4,14 +4,18 @@
 
 description="Logitech Media Server in a Gentoo Docker container"
 
-command="/usr/bin/docker"
-command_args="start ${LMS_GD_CONTAINER:-lms}"
-
-command_background=yes
-pidfile=/run/docker-lms.pid
-
 depend() {
-    need net
-    use alsasound
-    after bootmisc
+    need net docker
+}
+
+start() {
+    ebegin "Starting Logitech Media Server container"
+    docker start "${LMS_GD_CONTAINER:-lms}"
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping Logitech Media Server container"
+    docker stop "${LMS_GD_CONTAINER:-lms}"
+    eend $?
 }
