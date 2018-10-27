@@ -90,7 +90,7 @@ To have the host start the container:
 
 # Versions
 
-+ 0.2 TBR - add cron, syslog, logrotate to image
++ 0.2 TBR - add cron, syslog, logrotate to image; support bridged n/w; add backup
 + 0.1 initial proof of concept
 
 # Prior Art
