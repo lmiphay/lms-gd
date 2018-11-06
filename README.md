@@ -79,6 +79,7 @@ To have the host start the container:
 
 * `rc-config add lms-gd`
 * [optional] change container name in /etc/conf.d/lms-gd
+* [optional] set public IP address in /etc/conf.d/lms-gd
 * `/etc/init/lms-gd start`
 
 # Todo
