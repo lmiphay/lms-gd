@@ -9,13 +9,30 @@ depend() {
 }
 
 start() {
-    ebegin "Starting Logitech Media Server container"
-    docker start "${LMS_GD_CONTAINER:-lms}"
+    local container="${LMS_GD_CONTAINER:-lms}"
+
+    ebegin "Starting Logitech Media Server container $container"
+    docker start "$container"
     eend $?
+
+    if [ -n "${LMS_GD_IP_ADDRESS}" ] ; then
+	ebegin "Add public IP to Logitech Media Server container $container"
+	until [ "$(docker inspect -f {{.State.Running}} $container)" == "true" ] ; do sleep 0.3; done
+	docker-link start "$container" "${LMS_GD_IP_ADDRESS}"
+	eend $?
+    fi
 }
 
 stop() {
-    ebegin "Stopping Logitech Media Server container"
-    docker stop "${LMS_GD_CONTAINER:-lms}"
+    local container="${LMS_GD_CONTAINER:-lms}"
+
+    if [ -n "${LMS_GD_IP_ADDRESS}" ] ; then
+	ebegin "Removing public IP from Logitech Media Server container $container"
+	docker-link stop "$container"
+	eend $?
+    fi
+
+    ebegin "Stopping Logitech Media Server container $container"
+    docker stop -t 10 "$container" # wait 10 seconds for the container to stop before killing it
     eend $?
 }
