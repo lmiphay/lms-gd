@@ -1,6 +1,8 @@
 # lms-gd : Logitech Media Server in a Gentoo Docker container
 
-Install via [lms-gd](https://cgit.gentoo.org/user/lmiphay.git/tree/media-sound/lms-gd) ebuild in the [lmiphay](https://cgit.gentoo.org/user/lmiphay.git/) overlay.
+This project allows Logitech Media Server to be run inside a Gentoo Docker container, in turn running on a Gentoo host.
+
+Currently this project can be installed via the [lms-gd](https://cgit.gentoo.org/user/lmiphay.git/tree/media-sound/lms-gd) ebuild in the [lmiphay](https://cgit.gentoo.org/user/lmiphay.git/) overlay.
 
 # Usage
 
@@ -82,10 +84,11 @@ To have the host start the container:
 # Todo
 
 + set /mnt/music in /etc/logitechmediaserver/server.prefs
-+ setup (normal - not docker style) bridged networking to support castbridge/shairport)
++ setup normal (not docker style) [bridged networking](https://github.com/lmiphay/docker-link) to support castbridge/shairport
 + script removal RESTRICT="bindist mirror" in ebuild and rebuild manifest
 + bindfs the container filesystem
 + add a unit file
++ [reduce the size of the image (DOCKER_BUILDKIT=1 on 18.06)](https://github.com/moby/moby/issues/32507#issuecomment-409092581)
 
 # Versions
 
