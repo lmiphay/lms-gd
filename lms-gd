@@ -11,17 +11,35 @@ router_address=${LMS_GD_ROUTER}
 
 overlay="git://anongit.gentoo.org/user/squeezebox.git"
 
+get_overlay()
+{
+    git clone "${overlay}"
+    (   # remove: RESTRICT="bindist mirror"
+	cd squeezebox/media-sound/logitechmediaserver-bin
+	for file in $(grep -l RESTRICT *.ebuild) ; do
+	    [ -f "$file" ] && sed -i '/RESTRICT/d' "$file"
+	done
+	ebuild $file manifest
+    )
+}
+
+get_lms_config()
+{
+    if [ -d "/etc/logitechmediaserver" ] ; then
+	echo "Copying /etc/logitechmediaserver to ${PWD}"
+	# this will fail unless the user has read rights on /etc/logitechmediaserver
+	cp -upvr /etc/logitechmediaserver .
+	sed -i '/^mediadirs:/{n;s:.*:- /mnt/media:}' logitechmediaserver/server.prefs
+    else
+	echo "/etc/logitechmediaserver not found - manually copy in a settings directory if needed."
+    fi
+}
+
 case "$1" in
-    init)
-	cp -upv /usr/share/lms-gd/{Dockerfile,lms.keywords,lms.use,make.conf.lms-gd,squeezebox.conf} .
-	[ ! -d "squeezebox" ] && git clone "${overlay}"  # remove? RESTRICT="bindist mirror"
-	if [ -d "/etc/logitechmediaserver" ] ; then
-	    echo "Attempting to copy the current servers /etc/logitechmediaserver to this directory"
-	    # this will fail unless the user has read rights on /etc/logitechmediaserver
-	    cp -upvr /etc/logitechmediaserver .
-	else
-	    echo "/etc/logitechmediaserver not found - manually copy in a settings directory if needed."
-	fi
+    init)  # create a context for the container build
+	[ ! -f "Dockerfile" ]         && cp -upv /usr/share/lms-gd/{Dockerfile,lms.keywords,lms.use,make.conf.lms-gd,squeezebox.conf} .
+	[ ! -d "squeezebox" ]         && get_overlay
+	[ ! -d "logitechmediaserver"] && get_lms_config  # try and find an existing lms config directory
 	;;
     build)
 	exec docker build --tag "${2:-$image_name}" .
