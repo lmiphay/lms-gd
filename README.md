@@ -106,8 +106,9 @@ To have the host start the container:
   * support bridged n/w
   * add backup support to lms-gd
   * set mediadir in server.prefs
-  * script removal RESTRICT="bindist mirror" in ebuild and rebuilds manifest
+  * script removal RESTRICT="bindist mirror" in ebuild and rebuild manifest
   * added a unit file (to manage the service on the host)
+  * add logrotate config on host
 + 0.1 initial proof of concept
 
 # Prior Art/Related Information/References
