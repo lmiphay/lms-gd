@@ -1,0 +1,12 @@
+[Unit]
+Description=Logitech Media Server in a Gentoo Docker container"
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/docker start lms
+ExecStop=/usr/bin/docker stop lms
+
+[Install]
+WantedBy=multi-user.target
