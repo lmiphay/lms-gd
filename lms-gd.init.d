@@ -17,7 +17,15 @@ start() {
 
     if [ -n "${LMS_GD_IP_ADDRESS}" ] ; then
 	ebegin "Add public IP to Logitech Media Server container $container"
-	until [ "$(docker inspect -f {{.State.Running}} $container)" == "true" ] ; do sleep 0.3; done
+	count=0
+	until [ "$(docker inspect -f {{.State.Running}} $container)" == "true" ] ; do
+	    sleep 0.3;
+	    let count+=1
+	    if [ $count -eq 30 ] ; then
+		echo "Failed to run container $container"
+		break
+	    fi
+	done
 	docker-link start "$container" "${LMS_GD_IP_ADDRESS}"
 	eend $?
     fi
