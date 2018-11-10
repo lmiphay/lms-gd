@@ -51,7 +51,15 @@ Install lms-gd and prepare to create an lms container:
 * `cd /var/tmp/lms-gd-build-area`
 * `lms-gd init`
 
+`lms-gd init` creates a context for the subsequent image build by:
+
+* copying Dockerfile and portage configuration files from /usr/share/lms-gd (if not already present)
+* git cloning the `squeezebox` overlay (if not already present) and remove RESTRICT lines from the ebuilds
+* copies the contents of /etc/logitechmediaserver
+
 Examine/change the contents of the files in: /var/tmp/lms-gd-build-area
+
+Check that the first element of the mediadirs array in logitechmediaserver/server.prefs has been set to: /mnt/music
 
 Now build the image, create an lms container and finally start it:
 
@@ -67,11 +75,13 @@ After `lms-gd init` is run, useful customisations include:
 + adjust keywords in lms.keywords to select which version of logitechmediaserver-bin is installed.
 + add a local mirror to make.conf.lms-gd - e.g. GENTOO_MIRRORS="http://192.168.1.42/gentoo http://distfiles.gentoo.org"
 
-lms-gd references three environment variable during operation. The variables and defaults are:
+lms-gd operation is controlled by these variables - listed here with defaults:
 
 + `LMS_GD_MUSIC="/mnt/music"`           (location of music directory to mount from the host)
 + `LMS_GD_IMAGE="gentoo/lms:latest"`    (the name of the image created by `lms-gd build`)
 + `LMS_GD_CONTAINER="lms"`              (the name of the container created by `lms-gd create`)
++ `LMS_GD_STARTUP_WAIT=20`              (how long to wait on startup for the contiainer to be in the running state)
++ `LMS_GD_IP_ADDRESS=""`                (the IP address to be assigned in bridged mode)
 
 # OpenRC
 
@@ -80,20 +90,24 @@ To have the host start the container:
 * `rc-config add lms-gd`
 * [optional] change container name in /etc/conf.d/lms-gd
 * [optional] set public IP address in /etc/conf.d/lms-gd
+* [optional] set startup-wait in /etc/conf.d/lms-gd
 * `/etc/init/lms-gd start`
 
 # Todo
 
-+ set /mnt/music in /etc/logitechmediaserver/server.prefs
 + setup normal (not docker style) [bridged networking](https://github.com/lmiphay/docker-link) to support castbridge/shairport
-+ script removal RESTRICT="bindist mirror" in ebuild and rebuild manifest
-+ bindfs the container filesystem
-+ add a unit file
 + [reduce the size of the image (DOCKER_BUILDKIT=1 on 18.06)](https://github.com/moby/moby/issues/32507#issuecomment-409092581)
++ bindfs the container filesystem
 
 # Versions
 
-+ 0.2 TBR - add cron, syslog, logrotate to image; support bridged n/w; add backup
++ 0.2 TBR
+  * add cron, syslog, logrotate to image
+  * support bridged n/w
+  * add backup support to lms-gd
+  * set mediadir in server.prefs
+  * script removal RESTRICT="bindist mirror" in ebuild and rebuilds manifest
+  * added a unit file (to manage the service on the host)
 + 0.1 initial proof of concept
 
 # Prior Art/Related Information/References
