@@ -1,5 +1,7 @@
 #!/bin/bash
 
+VERSION="0.2"
+
 music_dir=${LMS_GD_MUSIC:-"/mnt/music"}
 image_name=${LMS_GD_IMAGE:-"gentoo/lms:latest"}
 container_name=${LMS_GD_CONTAINER:-"lms"}
@@ -86,8 +88,11 @@ case "$1" in
 	nsenter -t "$pid" -n ip route add default via "${6:-$router_address}" dev lms-int
 	#iptables -P FORWARD ACCEPT
 	;;
+    version)
+	echo $VERSION
+	;;
     *)
-        echo "Usage: $(basename $0) {init|create|start|stop|restart|shell|status|backup}"
+        echo "Usage: $(basename $0) {init|create|start|stop|restart|shell|status|backup|version}"
 	echo ""
 	echo "       $(basename $0) init"
 	echo "       $(basename $0) build [<image_name>]"
@@ -99,6 +104,7 @@ case "$1" in
 	echo "       $(basename $0) status"
 	echo "       $(basename $0) backup [<container_name>]"
 	echo "       $(basename $0) bridge [<container_name> <bridge_name> <ip_address> <broadcast_address> <router_address>]"
+	echo "       $(basename $0) version"
 	echo ""
 	echo "Settings:"
 	echo ""
