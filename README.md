@@ -25,7 +25,8 @@ Usage: lms-gd {init|create|start|stop|restart|shell|status|backup}
        lms-gd shell [<container_name>]
        lms-gd status
        lms-gd backup [<container_name>]
-       lms-gd bridge [<container_name> <bridge_name> <ip_address> <broadcast_address> <router_address>]
+       lms-gd bridge [<container_name> <ip_address> <bridge_name>]
+       lms-gd version
 
 Settings:
 
