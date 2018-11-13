@@ -1,10 +1,10 @@
 # lms-gd : Logitech Media Server in a Gentoo Docker container
 
-This project allows Logitech Media Server to be run inside a Gentoo Docker container, in turn running on a Gentoo host.
+lms-gd supports running Logitech Media Server inside a Gentoo Docker container. The container in turn runs on a Gentoo host.
 
-Currently this project can be installed via the [lms-gd](https://cgit.gentoo.org/user/lmiphay.git/tree/media-sound/lms-gd) ebuild in the [lmiphay](https://cgit.gentoo.org/user/lmiphay.git/) overlay.
+It can be installed via the [lms-gd](https://cgit.gentoo.org/user/lmiphay.git/tree/media-sound/lms-gd) ebuild in the [lmiphay](https://cgit.gentoo.org/user/lmiphay.git/) overlay.
 
-# Usage
+# Overview
 
 The lms-gd management program can be used to:
 + build images, and createstart/stop containers
@@ -38,7 +38,7 @@ $
 
 # Quickstart
 
-First some generic docker steps:
+First generic docker steps:
 
 * setup Docker on gentoo - see: [https://wiki.gentoo.org/wiki/Docker](https://wiki.gentoo.org/wiki/Docker)
 * check the new kernel configuration using e.g.: `/usr/share/docker/contrib/check-config.sh /usr/src/linux/.config`
@@ -48,17 +48,17 @@ First some generic docker steps:
 Install lms-gd and prepare to create an lms container:
 
 * `layman -a lmiphay && emerge lms-gd`
-* `mkdir /var/tmp/lms-gd-build-area`
-* `cd /var/tmp/lms-gd-build-area`
+* `mkdir /var/tmp/lms-context`
+* `cd /var/tmp/lms-context`
 * `lms-gd init`
 
 `lms-gd init` creates a context for the subsequent image build by:
 
 * copying Dockerfile and portage configuration files from /usr/share/lms-gd (if not already present)
-* git cloning the `squeezebox` overlay (if not already present) and remove RESTRICT lines from the ebuilds
-* copies the contents of /etc/logitechmediaserver
+* git cloning the `squeezebox` overlay (if not already present) and removes RESTRICT lines from the ebuilds
+* copies the contents of /etc/logitechmediaserver to the context directory
 
-Examine/change the contents of the files in: /var/tmp/lms-gd-build-area
+Examine/change the contents of the files in: `/var/tmp/lms-context`
 
 Check that the first element of the mediadirs array in logitechmediaserver/server.prefs has been set to: /mnt/music
 
@@ -88,10 +88,10 @@ lms-gd operation is controlled by these variables - listed here with defaults:
 
 To have the host start the container:
 
-* `rc-config add lms-gd`
 * [optional] change container name in /etc/conf.d/lms-gd
 * [optional] set public IP address in /etc/conf.d/lms-gd
 * [optional] set startup-wait in /etc/conf.d/lms-gd
+* `rc-config add lms-gd`
 * `/etc/init/lms-gd start`
 
 # Todo
