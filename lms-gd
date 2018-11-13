@@ -2,6 +2,8 @@
 
 VERSION="0.2"
 
+template=${LMS_GD_TEMPLATE:-"/usr/share/lms-gd"}
+
 music_dir=${LMS_GD_MUSIC:-"/mnt/music"}
 image_name=${LMS_GD_IMAGE:-"gentoo/lms:latest"}
 container_name=${LMS_GD_CONTAINER:-"lms"}
@@ -45,7 +47,7 @@ get_lms_config()
 
 case "$1" in
     init)  # create a context for the container build
-	[ ! -f "Dockerfile" ]          && cp -upv /usr/share/lms-gd/{Dockerfile,lms.keywords,lms.use,make.conf.lms-gd,squeezebox.conf} .
+	[ ! -f "Dockerfile" ]          && cp -upv ${template}/{Dockerfile,lms.keywords,lms.use,make.conf.lms-gd,squeezebox.conf} .
 	[ ! -d "squeezebox" ]          && get_overlay
 	[ ! -d "logitechmediaserver" ] && get_lms_config  # try and find an existing lms config directory
 	;;
@@ -54,6 +56,7 @@ case "$1" in
 	;;
     create-nf|create-no-forwards|cnf)
 	PORT_FORWARDS=""
+	;&
     create)
 	exec docker create \
 	     $PORT_FORWARDS \
