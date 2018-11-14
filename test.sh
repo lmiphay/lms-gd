@@ -19,12 +19,12 @@ cd $context
 
 echo -e "Config:\n PATH=$PATH\n src_tree=$src_tree\n context=$context\n\n$(env|grep LMS_GD)\n\n"
 
-steps="version init"
-#steps="version init build create start status" # backup bridge
+steps="version init build create start status" # backup bridge
 
 for step in $steps; do
     echo "lms-gd $step -->>"
     lms-gd "$step"
+    echo "<<---------------"
 done
 
 exit 0
