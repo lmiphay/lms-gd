@@ -25,15 +25,20 @@ COPY make.conf.lms-gd .
 
 RUN cat make.conf.lms-gd >>make.conf && \
     echo rc_provide="net" >>/etc/rc.conf && \
-    emerge app-admin/sysklogd sys-process/cronie app-admin/logrotate media-sound/logitechmediaserver-bin && \
+    emerge sys-process/cronie app-admin/logrotate media-sound/logitechmediaserver-bin && \
     perl-cleaner --modules && \
     perl-cleaner --force --libperl && \
     rc-update add logitechmediaserver default && \
-    rc-update add sysklogd default && \
     rc-update add cronie default && \
     rm -rf /usr/portage
 
 COPY --chown=logitechmediaserver logitechmediaserver /etc/logitechmediaserver
+
+# add syslogd (alternatively bind mount in /dev/log)
+RUN emerge app-admin/sysklogd && \
+    rc-update add sysklogd default
+# don't start/stop klogd - TODO patch via /etc/portage/patches/media-sound/lms-gd (possible?)
+COPY sysklogd.rc7 /etc/init.d
 
 VOLUME /mnt/music
 
