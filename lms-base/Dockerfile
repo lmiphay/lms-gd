@@ -18,7 +18,7 @@ COPY perl.use package.use
 COPY mirrors.make.conf .
 
 RUN \
-	--mount from=portage,src=/usr/portage,dst=/usr/portage \
+	--mount=from=portage,src=/usr/portage,dst=/usr/portage \
 	\
 	cat mirrors.make.conf >>make.conf && \
 	echo rc_provide="net" >>/etc/rc.conf && \
