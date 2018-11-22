@@ -1,4 +1,3 @@
-#
 # syntax = tonistiigi/dockerfile:runmount20180618
 #
 # Requires Docker v18.06 with `DOCKER_BUILDKIT=1` (see: https://github.com/moby/moby/issues/32507)
