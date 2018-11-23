@@ -2,7 +2,7 @@
 #
 # Requires Docker v18.06 with `DOCKER_BUILDKIT=1` (see: https://github.com/moby/moby/issues/32507)
 # docker daemon needs to started with --experimental or the Experimental config
-#
+# Ref: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md
 
 # image is based on stage3-amd64 - see:
 #  1. https://github.com/gentoo/gentoo-docker-images
@@ -18,10 +18,10 @@ COPY perl.use package.use
 COPY mirrors.make.conf .
 
 RUN \
-	--mount=from=portage,src=/usr/portage,dst=/usr/portage \
-	\
 	cat mirrors.make.conf >>make.conf && \
-	echo rc_provide="net" >>/etc/rc.conf && \
+	echo rc_provide="net" >>/etc/rc.conf
+
+RUN --mount=from=portage,src=/usr/portage,dst=/usr/portage \
 	\
 	emerge \
 	    app-admin/logrotate \
@@ -31,13 +31,14 @@ RUN \
 	    && \
 	\
 	perl-cleaner --modules && \
-	perl-cleaner --force --libperl && \
-	\
-	rc-update add cronie default && \
-	rc-update add sysklogd default
+	perl-cleaner --force --libperl
 
 # syslogd (could alternaitvely bind mount in /dev/log)
 # don't start/stop klogd - TODO patch via /etc/portage/patches/media-sound/lms-gd (possible?)
 COPY sysklogd.rc7 /etc/init.d
+
+RUN \
+	rc-update add cronie default && \
+	rc-update add sysklogd default
 
 ENTRYPOINT [ "/sbin/init" ]
