@@ -21,14 +21,12 @@ COPY squeezebox.conf repos.conf/
 COPY lms.keywords package.keywords
 COPY make.conf.lms-gd .
 
-RUN \
-	--mount from=portage,src=/usr/portage,dst=/usr/portage \
-	\
-	cat make.conf.lms-gd >>make.conf && \
-	\    
-	emerge media-sound/logitechmediaserver-bin && \
-	\
-	rc-update add logitechmediaserver default
+RUN cat make.conf.lms-gd >>make.conf
+
+RUN --mount from=portage,src=/usr/portage,dst=/usr/portage \
+	emerge media-sound/logitechmediaserver-bin
+
+RUN rc-update add logitechmediaserver default
 
 COPY --chown=logitechmediaserver logitechmediaserver /etc/logitechmediaserver
 
