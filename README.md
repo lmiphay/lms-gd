@@ -7,7 +7,7 @@ It can be installed via the [lms-gd](https://cgit.gentoo.org/user/lmiphay.git/tr
 # Overview
 
 The lms-gd management program can be used to:
-+ build images, and createstart/stop containers
++ build images, and create, start/stop containers
 + start a shell on a running container
 + backup the configuration of a running container
 
