@@ -35,7 +35,7 @@ RUN --mount=from=portage,src=/usr/portage,dst=/usr/portage \
 
 # syslogd (could alternaitvely bind mount in /dev/log)
 # don't start/stop klogd - TODO patch via /etc/portage/patches/media-sound/lms-gd (possible?)
-COPY sysklogd.rc7 /etc/init.d
+COPY sysklogd.rc7 /etc/init.d/sysklogd
 
 RUN \
 	rc-update add cronie default && \
