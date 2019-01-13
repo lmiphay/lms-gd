@@ -97,7 +97,7 @@ To have the host start the container:
 # Todo
 
 + setup normal (not docker style) [bridged networking](https://github.com/lmiphay/docker-link) to support castbridge/shairport
-+ [reduce the size of the image (DOCKER_BUILDKIT=1 on 18.06)](https://github.com/moby/moby/issues/32507#issuecomment-409092581)
++ [reduce the size of the image (DOCKER_BUILDKIT=1 on >=18.09)](https://github.com/moby/moby/issues/32507#issuecomment-409092581)
 + bindfs the container filesystem
 
 # Versions
