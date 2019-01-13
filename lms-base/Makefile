@@ -1,12 +1,9 @@
 TAG="lms/base:latest"
 
-OPT="--progress=plain"
-#OPT="--no-cache --progress=plain"
-
 all: build
 
 build: sysklogd.rc7
-	DOCKER_BUILDKIT=1 docker build $(OPT) --tag $(TAG) .
+	../bin/gd-build $(TAG) .
 
 sysklogd.rc7:
 	cp ../common/sysklogd.rc7 .
