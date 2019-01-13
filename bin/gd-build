@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ $# -lt 1 ] ; then
+    echo "usage: $(basename $0) <tag> [<dir>]"
+    exit 1
+fi
+
+tag="$1"
+dir=${2:-"."}
+
+opt=${GD_BUILD_OPT:-"--progress=plain"}
+# opt=${GD_BUILD_OPT:-"--no-cache --progress=plain"}
+
+echo DOCKER_BUILDKIT=1 exec docker build ${opt} --tag "${tag}" "${dir}"
