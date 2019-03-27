@@ -13,15 +13,13 @@ FROM lms/base:latest
 # 42459
 EXPOSE 3483/tcp 3483/udp 9000 9090
 
-COPY squeezebox /usr/local/portage
-
 WORKDIR /etc/portage
-
+RUN echo "ACCEPT_LICENSE=logitechmediaserver-bin" >>make.conf
+ARG LMSVER
+RUN echo "=media-sound/logitechmediaserver-bin-${LMSVER} ~amd64" >package.keywords
 COPY squeezebox.conf repos.conf/
-COPY lms.keywords package.keywords
-COPY make.conf.lms-gd .
 
-RUN cat make.conf.lms-gd >>make.conf
+COPY squeezebox /usr/local/portage
 
 RUN --mount from=portage,src=/usr/portage,dst=/usr/portage \
 	emerge media-sound/logitechmediaserver-bin
