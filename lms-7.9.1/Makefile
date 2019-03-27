@@ -1,9 +1,13 @@
-TAG="lms:7.9.1"
+TAG := lms:$(LMSVER)
 
 all: squeezebox update build
 
 build:
-	../bin/gd-build $(TAG) .
+	DOCKER_BUILDKIT=1 docker build \
+		--build-arg LMSVER=$(LMSVER) \
+		--progress=plain \
+		--tag ${TAG} \
+		.
 
 squeezebox:
 	git clone git://anongit.gentoo.org/user/squeezebox.git
