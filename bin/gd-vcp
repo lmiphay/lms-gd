@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ $# -lt 2 ] ; then
+    echo "usage: $(basename $0) <source_dir> <dest_volume>"
+    echo "usage: $(basename $0) <source_volume> <dest_dir>"
+    exit 1
+fi
+
+if [ -d "$1" ] ; then
+
+    source_dir="$1"
+    dest_volume="$2"
+
+    if ! docker volume inspect "$dest_volume" ; then
+	echo "creating volume: $dest_volume"
+	docker volume create "$dest_volume"
+    fi
+
+    exec tar -C "$source_dir" -cf - . | docker --rm run -i -a stdin --volume "$dest_volume":/cptmp alpine tar -C /cptmp -xf -
+    
+elif [ -d "$2" ] ; then
+
+    source_volume="$1"
+    dest_dir="$2"
+
+    exec docker --rm run --volume "$source_volume":/cptmp alpine tar -C /cptmp -cf - . | tar -C "$dest_dir" -xf -
+fi
+
+echo "check source/destination directory?"
+
+exit 1
