@@ -10,14 +10,23 @@ emerge \
     dev-lang/perl \
     sys-process/cronie
 
+patch -p 1 --directory=/etc/init.d </root/sysklogd-disable-klogd.patch
+
 perl-cleaner --modules
 perl-cleaner --force --libperl
 
 emerge =media-sound/logitechmediaserver-bin-$(VERSION)
 
-rc-update add cronie default
-rc-update add sysklogd default
-rc-update add logitechmediaserver default
-# start?
+if [ ! -f /etc/logitechmediaserver/server.prefs ] ; then
+    cp -upvr /root/logitechmediaserver.etc/ /etc/logitechmediaserver/
+    sed -i '/^mediadirs:/{n;s:.*:- /mnt/media:}' /etc/logitechmediaserver/server.prefs
+    chown -R logitechmediaserver:logitechmediaserver /etc/logitechmediaserver
+fi
+
+for service in cronie sysklogd ; do
+    rc-update add $service default
+    /etc/init.d/$service start
+done
+
 exit 0
 
