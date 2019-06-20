@@ -12,19 +12,22 @@ FROM gentoo/stage3-amd64:latest
 # 42459
 EXPOSE 3483/tcp 3483/udp 9000 9090
 
-WORKDIR /etc/portage
-COPY perl.use package.use
-COPY mirrors.make.conf .
-
-RUN cat mirrors.make.conf >>make.conf
-RUN echo rc_provide="net" >>/etc/rc.conf
-RUN echo "ACCEPT_LICENSE=logitechmediaserver-bin" >>make.conf
-
+ARG MIRROR
 ARG VERSION
-RUN echo "=media-sound/logitechmediaserver-bin-${VERSION} ~amd64" >>package.keywords
-COPY squeezebox.conf repos.conf/
-COPY squeezebox /usr/local/portage/
 
+WORKDIR /etc
+RUN echo rc_provide="net" >>rc.conf
+
+WORKDIR /etc/portage
+RUN echo -e "GENTOO_MIRRORS=${MIRROR}\nACCEPT_LICENSE=logitechmediaserver-bin" >>make.conf
+RUN echo "dev-lang/perl ithreads" >>package.use
+RUN echo "=media-sound/logitechmediaserver-bin-${VERSION} ~amd64" >>package.keywords
+
+WORKDIR /etc/portage/repos.conf
+RUN echo -e "[squeezebox]\nlocation = /usr/local/squeezebox.repo\nauto-sync = no" >squeezebox.conf
+
+COPY squeezebox.repo /usr/local/
+COPY install.sh sysklogd-disable-klogd.patch /root/
 
 VOLUME /mnt/music
 
