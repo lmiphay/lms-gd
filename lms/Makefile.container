@@ -5,7 +5,7 @@ MIRROR ?= http://distfiles.gentoo.org
 
 initial: base_utils /usr/bin/perl
 
-final: lms /etc/logitechmediaserver/server.prefs configure
+final: /opt/logitechmediaserver/slimserver.pl /etc/logitechmediaserver/server.prefs configure
 
 base_utils:
 	emerge app-admin/logrotate app-admin/sysklogd sys-process/cronie
@@ -20,7 +20,7 @@ base_utils:
 /etc/portage/package.use/perl.use:
 	echo "dev-lang/perl ithreads" >$@
 
-lms:
+/opt/logitechmediaserver/slimserver.pl:
 	echo -e "GENTOO_MIRRORS=$(MIRROR)\nACCEPT_LICENSE=logitechmediaserver-bin" >>/etc/portage/make.conf
 	echo "=media-sound/logitechmediaserver-bin-$(VERSION) ~amd64" >>/etc/portage/package.keywords
 	emerge =media-sound/logitechmediaserver-bin-$(VERSION)
