@@ -1,0 +1,39 @@
+# -*- Makefile -*-
+
+VERSION ?= 7.9.2_pre20190615
+MIRROR ?= http://distfiles.gentoo.org
+
+initial: base_utils /usr/bin/perl
+
+final: lms /etc/logitechmediaserver/server.prefs configure
+
+base_utils:
+	emerge app-admin/logrotate app-admin/sysklogd sys-process/cronie
+	patch -p 1 --directory=/etc/init.d </root/sysklogd-disable-klogd.patch
+# or use /etc/portage/patches/app-admin/sysklogd/sysklogd-disable-klogd.patch
+
+/usr/bin/perl: /etc/portage/package.use/perl.use
+	emerge dev-lang/perl
+	perl-cleaner --modules
+	perl-cleaner --force --libperl
+
+/etc/portage/package.use/perl.use:
+	echo "dev-lang/perl ithreads" >$@
+
+lms:
+	echo -e "GENTOO_MIRRORS=$(MIRROR)\nACCEPT_LICENSE=logitechmediaserver-bin" >>/etc/portage/make.conf
+	echo "=media-sound/logitechmediaserver-bin-$(VERSION) ~amd64" >>/etc/portage/package.keywords
+	emerge =media-sound/logitechmediaserver-bin-$(VERSION)
+	echo "`date +'%Y-%m-%d %H:%M:%S'` merged lms $(VERSION)" >>/etc/logitechmediaserver/emerge-history.log
+
+/etc/logitechmediaserver/server.prefs:
+	echo "`date +'%Y-%m-%d %H:%M:%S'` initialised /etc/logitechmediaserver for lms $(VERSION)" >>/etc/logitechmediaserver/emerge-history.log
+	cp -upvr /root/logitechmediaserver.etc/* /etc/logitechmediaserver/
+	sed -i '/^mediadirs:/{n;s:.*:- /mnt/media:}' /etc/logitechmediaserver/server.prefs
+	chown -R logitechmediaserver:logitechmediaserver /etc/logitechmediaserver
+
+configure:
+	for service in cronie sysklogd logitechmediaserver; do \
+	    rc-update add $$service default ; \
+	    /etc/init.d/$$service start ; \
+	done
