@@ -16,7 +16,7 @@ PORT_FORWARDS ?= -p 3483:3483 -p 3483:3483/udp -p 9000:9000 -p 9090:9090
 
 all: pull image container
 
-.PHONY: pull image container clean
+.PHONY: pull image container clean settings
 
 pull:
 	docker pull gentoo/stage3-amd64:latest
@@ -51,3 +51,8 @@ cleanartifacts:
 
 %.etc:
 	mkdir -p $@ && [ -d $(ETC_SOURCE) ] && cp -pr $(ETC_SOURCE)/* $@/
+
+settings:
+	@echo -n "VERSION=$(VERSION) CONTAINER=$(CONTAINER) OVERLAY=$(OVERLAY) BRANCH=$(BRANCH) MIRROR=$(MIRROR) "
+	@echo -n "ETC_SOURCE=$(ETC_SOURCE) LIBRARY_SOURCE=$(LIBRARY_SOURCE) PORTAGE_SOURCE=$(PORTAGE_SOURCE) PORTAGE_DES$(PORTAGE_DEST) "
+	@echo "PORT_FORWARDS=\"$(PORT_FORWARDS)\""
