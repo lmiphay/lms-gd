@@ -58,6 +58,6 @@ stop() {
 
     ebegin "Stopping Logitech Media Server container $container"
     lmsgd_log "stopping $container: $(docker ps -f name=$container|tail -1)"
-    docker stop -t 10 "$container" # wait 10 seconds for the container to stop before killing it
+    docker stop -t ${LMS_GD_SHUTDOWN_WAIT:-10} "$container" # wait 10 seconds for the container to stop before killing it
     eend $?
 }
